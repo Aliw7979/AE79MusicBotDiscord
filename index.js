@@ -37,6 +37,23 @@ if (message.content.startsWith(`${prefix}play`) || message.content.startsWith(`$
     message.channel.send("Are u dumb or something?!");
 }
 })
+const queue = new Map();
+
+async function execute(message, serverQueue) {
+    const args = message.content.split(" ");
+  
+    const voiceChannel = message.member.voice.channel;
+    if (!voiceChannel)
+      return message.channel.send(
+        "Hey Dumb you should be in voice chat channel ;) "
+      );
+    const permissions = voiceChannel.permissionsFor(message.client.user);
+    if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
+      return message.channel.send(
+        "Goddamn! gimme permission to connect and speak! gimme that shits :))"
+      );
+    }
+  }
 
 
 
