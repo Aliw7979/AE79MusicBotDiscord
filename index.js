@@ -1,17 +1,24 @@
 const Discord = require('discord.js');
+const client = new Discord.Client();
 const {
 	prefix,
 	token,
 } = require('./config.json');
 const ytdl = require('ytdl-core');
+const fs = require('fs')
 const queue = new Map();
-const client = new Discord.Client();
-
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for(const file of commandFiles)
+{
+  const command= require(`./commands/${file}`);
+  client.commands.set(command.name,command)
+}
 
 
 client.once('ready', () => {
     console.log('Hell Yeah! :)) ');
-   });
+});
 client.once('reconnecting', () => {
  console.log('Trying! :D');
 });
@@ -26,7 +33,7 @@ client.on('message', async message => {
     const serverQueue = queue.get(message.guild.id);
 
 if (message.content.startsWith(`${prefix}play`) || message.content.startsWith(`${prefix}p`)) {
-    execute(message, serverQueue);
+    client.commands.get('play').execute(message, serverQueue);
     return;
 } else if (message.content.startsWith(`${prefix}skip`) || message.content.startsWith(`${prefix}s`)) {
     skip(message, serverQueue);
@@ -39,93 +46,7 @@ if (message.content.startsWith(`${prefix}play`) || message.content.startsWith(`$
 }
 })
 
-
-
-
-async function execute(message, serverQueue) {
-    const args = message.content.split(" ");
-  
-    const voiceChannel = message.member.voice.channel;
-    if (!voiceChannel)
-      return message.channel.send(
-        ""
-      );
-    
-    const songInfo = await ytdl.getInfo(args[1]);
-    
-    const song = {
-        title: songInfo.videoDetails.title,
-        url: songInfo.videoDetails.video_url,
-    };
-
-    if (!serverQueue) {
-        const queueContruct = {
-          textChannel: message.channel,
-          voiceChannel: voiceChannel,
-          connection: null,
-          songs: [],
-          volume: 4,
-          playing: true
-        };
-    
-        queue.set(message.guild.id, queueContruct);
-    
-        queueContruct.songs.push(song);
-    
-        try {
-          var connection = await voiceChannel.join();
-          queueContruct.connection = connection;
-          play(message.guild, queueContruct.songs[0]);
-        } 
-        catch (err) {
-          console.log(err);
-          queue.delete(message.guild.id);
-          return message.channel.send(err);
-        }
-    }   
-    else {
-        serverQueue.songs.push(song);
-        return message.channel.send(`${song.title} has been added to the queue buddy!`);
-        }
-}
-    
-
-
-function stop(message, serverQueue) {
-        if (!message.member.voice.channel)
-          return message.channel.send(
-            "Hey though guy you should be in voice channel to stop things!"
-          );
-          
-        if (!serverQueue)
-          return message.channel.send("There is no song,you can't stop nothing,can you?!");
-          
-        serverQueue.songs = [];
-        serverQueue.connection.dispatcher.end();
-}
-
-
-function play(guild, song) {
-    const serverQueue = queue.get(guild.id);
-    if (!song) {
-      serverQueue.voiceChannel.leave();
-      queue.delete(guild.id);
-      return;
-    }
-  
-    const dispatcher = serverQueue.connection
-      .play(ytdl(song.url))
-      .on("finish", () => {
-        serverQueue.songs.shift();
-        play(guild, serverQueue.songs[0]);
-      })
-      .on("error", error => console.error(error));
-    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    serverQueue.textChannel.send(`Start playing: **${song.title}**`);
-  }
-
-
-  client.login(token); 
+client.login(token); 
 
 
 
