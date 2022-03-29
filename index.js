@@ -8,7 +8,6 @@ const queue = new Map();
 const client = new Discord.Client();
 
 
-client.login(token); 
 
 client.once('ready', () => {
     console.log('Hell Yeah! :)) ');
@@ -20,9 +19,9 @@ client.once('disconnect', () => {
  console.log('Disconnect! ;C ');
 });
 
-   client.on('message', async message => {
-    if (message.author.bot) return; //if messege was from the bot
-    if (!message.content.startsWith(prefix)) return;//if user didnt write prefix
+client.on('message', async message => {
+  if (message.author.bot) return; //if messege was from the bot
+  if (!message.content.startsWith(prefix)) return;//if user didnt write prefix
 
     const serverQueue = queue.get(message.guild.id);
 
@@ -129,6 +128,9 @@ function play(guild, song) {
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
     serverQueue.textChannel.send(`Start playing: **${song.title}**`);
   }
+
+
+  client.login(token); 
 
 
 
