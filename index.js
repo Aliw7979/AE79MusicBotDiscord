@@ -100,7 +100,7 @@ async function execute(message, serverQueue) {
 function stop(message, serverQueue) {
         if (!message.member.voice.channel)
           return message.channel.send(
-            "You have to be in a voice channel to stop the music!"
+            "Hey though guy you should be in voice channel to stop things!"
           );
           
         if (!serverQueue)
