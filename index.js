@@ -48,14 +48,9 @@ async function execute(message, serverQueue) {
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel)
       return message.channel.send(
-        "Hey Dumb you should be in voice chat channel ;) "
+        ""
       );
-    const permissions = voiceChannel.permissionsFor(message.client.user);
-    if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-      return message.channel.send(
-        "Goddamn! gimme permission to connect and speak! gimme that shits :))"
-      );
-    }
+    
     const songInfo = await ytdl.getInfo(args[1]);
     
     const song = {
