@@ -1,0 +1,26 @@
+{
+  "name": "ae79music",
+  "version": "1.0.0",
+  "description": "A normall and compact bot for playing music from youtube.",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "ffmpeg": "^0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "ytdl-core": "^4.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aliw7979/AE79MusicBotDiscord.git"
+  },
+  "author": "Aliw7979",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aliw7979/AE79MusicBotDiscord/issues"
+  },
+  "homepage": "https://github.com/Aliw7979/AE79MusicBotDiscord#readme"
+}
