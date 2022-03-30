@@ -4,6 +4,7 @@
   "description": "A normall and compact bot for playing music from youtube.",
   "main": "index.js",
   "dependencies": {
+    "@discordjs/opus": "github:discordjs/opus",
     "discord.js": "^12.5.3",
     "ffmpeg": "^0.0.4",
     "fluent-ffmpeg": "^2.1.2",

@@ -8,7 +8,7 @@ const ytdl = require('ytdl-core');
 const fs = require('fs')
 const queue = new Map();
 client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));//read every file ending with js
 for(const file of commandFiles)
 {
   const command= require(`./commands/${file}`);
@@ -30,7 +30,8 @@ client.on('message', async message => {
   if (message.author.bot) return; //if messege was from the bot
   if (!message.content.startsWith(prefix)) return;//if user didnt write prefix
 
-    const serverQueue = queue.get(message.guild.id);
+    const serverQueue = message.content.slice(prefix.length).split(/ +/);
+    const command = serverQueue.shift().toLowerCase();//everythings changes to lower case
 
 if (message.content.startsWith(`${prefix}play`) || message.content.startsWith(`${prefix}p`)) {
     client.commands.get('play').execute(message, serverQueue);

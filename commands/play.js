@@ -14,11 +14,34 @@ module.exports = {
             );
         }
         if(!args.length) return message.channel.send('Play what? gimme the name nice guy!');
-
+        
+        const validURL = (str) =>{
+            var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+            if(!regex.test(str)){
+                return false;
+            } else {
+                return true;
+            }
+        }
+        if(validURL(args[0])){
+ 
+            const  connection = await voiceChannel.join();
+            const stream  = ytdl(args[0], {filter: 'audioonly'});
+ 
+            connection.play(stream, {seek: 0, volume: 1})
+            .on('finish', () =>{
+                voiceChannel.leave();
+                message.channel.send('leaving channel');
+            });
+ 
+            await message.reply(`:thumbsup: Now Playing ***Your Link!***`)
+ 
+            return
+        }
         const connection = await voiceChannel.join();
-        const videoFinder = async (query) => {
-            const result = await ytSearch(query);
-            if(result.length > 1) return result.videos[0];
+        const videoFinder = async (args) => {
+            const result = await ytSearch(args);
+            if(result.videos.length > 1) return result.videos[0];
             else{
                 return null;
             }
@@ -30,7 +53,7 @@ module.exports = {
             .on('finish',()=>{
                 voiceChannel.leave();
             });
-            await message.reply(':thumbsub: Playing ***${video.title}***')
+            await message.reply(`:nerd: Playing ${video.title}`)
         }else {
             message.channel.send('Nope there is no any video that match with your fucking expectation!')
         }
